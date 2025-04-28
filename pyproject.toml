@@ -1,0 +1,24 @@
+[project]
+name = "musicschoolsys"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Ludwig S",email = "silvaludwig@outlook.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django (>=5.2,<6.0)",
+    "djangorestframework (>=3.16.0,<4.0.0)",
+    "django-cors-headers (>=4.7.0,<5.0.0)",
+    "python-dotenv (>=1.1.0,<2.0.0)",
+    "psycopg2-binary (>=2.9.10,<3.0.0)",
+    "google-api-python-client",
+    "google-auth-oauthlib",
+    "google-auth-httplib2"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
