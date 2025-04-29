@@ -1,0 +1,8 @@
+{% extends "gestao/base.html" %} {% block content %}
+<h2>{% if form.instance.id %}Editar Aluno{% else %}Novo Aluno{% endif %}</h2>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit" class="btn btn-success">Salvar</button>
+  <a href="{% url 'lista_alunos' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
