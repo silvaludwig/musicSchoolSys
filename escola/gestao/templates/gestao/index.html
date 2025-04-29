@@ -33,12 +33,12 @@
         </form>
       </div>
     </div>
-    {% else %}
+    {% comment %} {% else %}
     <div class="mt-4"></br></br></br>
       <a href="{% url 'lista_alunos' %}" class="btn btn-success btn-lg"
         >Acessar Sistema</a
       >
-    </div>
+    </div> {% endcomment %}
     {% endif %} {% if user.is_authenticated and not user.is_superuser %}
     <div class="alert alert-warning mt-3">
       Apenas administradores podem cadastrar alunos.

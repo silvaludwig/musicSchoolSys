@@ -34,10 +34,8 @@
                 href="{% url 'index' %}"
                 >Home</a
               >
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'login' %}">Login</a>
-            </li>
+
+          {% if user.is_authenticated %}
             <li class="nav-item">
               <form class="nav-link" method="post" action="{% url 'logout' %}">
                 {% csrf_token %}<button
@@ -57,7 +55,7 @@
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Opções de cadastro
+                Opções do Sistema
               </a>
               <ul class="dropdown-menu">
                 <li>
@@ -71,10 +69,24 @@
                   >
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#">Gerenciar Aulas</a>
+                  <a class="dropdown-item" href="{% url 'lista_alunos' %}"
+                    >Listar Alunos</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'lista_professores' %}"
+                    >Listar Professores</a
+                  >
                 </li>
               </ul>
             </li>
+          {% else %}
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+          </li>
+          {% endif %}
+
           </ul>
         </div>
       </div>
