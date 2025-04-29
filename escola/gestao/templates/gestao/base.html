@@ -39,7 +39,15 @@
               <a class="nav-link" href="{% url 'login' %}">Login</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+              <form class="nav-link" method="post" action="{% url 'logout' %}">
+                {% csrf_token %}<button
+                  class="nav-link p-0 border-0"
+                  style="background: none; color: inherit"
+                  type="submit"
+                >
+                  Logout
+                </button>
+              </form>
             </li>
             <li class="nav-item dropdown">
               <a
@@ -49,12 +57,18 @@
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Opções do Sistema
+                Opções de cadastro
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Cadastrar Alunos</a></li>
                 <li>
-                  <a class="dropdown-item" href="#">Cadastrar Professores</a>
+                  <a class="dropdown-item" href="{% url 'novo_aluno' %}"
+                    >Cadastrar Alunos</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'novo_professor' %}"
+                    >Cadastrar Professores</a
+                  >
                 </li>
                 <li>
                   <a class="dropdown-item" href="#">Gerenciar Aulas</a>

@@ -1,0 +1,30 @@
+{% extends "gestao/base.html" %} {% block content %}
+</br></br></br></br>
+<div class="row">
+  <!-- Formulário de Cadastro (Lado Esquerdo) -->
+  <div class="col-md-6">
+    <h2>Cadastrar Novo Professor</h2>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit" class="btn btn-success">Salvar</button>
+      <a href="{% url 'lista_professores' %}" class="btn btn-secondary">Voltar</a>
+    </form>
+  </div>
+
+  <!-- Preview dos Últimos Alunos (Lado Direito) -->
+  <div class="col-md-6">
+    <h2>Últimos Professores Cadastrados</h2>
+    <div class="list-group">
+      {% for professor in ultimos_professores %}
+      <div class="list-group-item">
+        <h5>{{ professor.nome }}</h5>
+        <p><strong>Instrumento:</strong> {{ professor.instrumentos }}</p>
+        <small>Cadastrado em: {{ professor.data_cadastro|date:"d/m/Y" }}</small>
+      </div>
+      {% empty %}
+      <p>Nenhum professor cadastrado ainda.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
