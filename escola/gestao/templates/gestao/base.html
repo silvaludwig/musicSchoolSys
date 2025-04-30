@@ -35,7 +35,9 @@
                 >Home</a
               >
 
-          {% if user.is_authenticated %}
+              {% if user.is_authenticated %}
+            </li>
+
             <li class="nav-item">
               <form class="nav-link" method="post" action="{% url 'logout' %}">
                 {% csrf_token %}<button
@@ -55,7 +57,7 @@
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                Opções do Sistema
+                Opções de Cadastro
               </a>
               <ul class="dropdown-menu">
                 <li>
@@ -68,6 +70,20 @@
                     >Cadastrar Professores</a
                   >
                 </li>
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Opções de Relatório
+              </a>
+              <ul class="dropdown-menu">
                 <li>
                   <a class="dropdown-item" href="{% url 'lista_alunos' %}"
                     >Listar Alunos</a
@@ -80,13 +96,21 @@
                 </li>
               </ul>
             </li>
-          {% comment %} {% else %}
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">Login</a>
-          </li> {% endcomment %}
-          {% endif %}
 
+            {% else %}
+            <li class="nav-item">
+              <form class="nav-link" method="post" action="{% url 'cadastro_usuario' %}">
+                {% csrf_token %}<button
+                  class="nav-link p-0 border-0"
+                  style="background: none; color: inherit"
+                  type="submit"
+                >
+                  Cadastre-se!
+                </button>
+              </form>
+            </li>
+              {% endif %}
+            </li>
           </ul>
         </div>
       </div>

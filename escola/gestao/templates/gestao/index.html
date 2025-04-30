@@ -39,11 +39,7 @@
         >Acessar Sistema</a
       >
     </div> {% endcomment %}
-    {% endif %} {% if user.is_authenticated and not user.is_superuser %}
-    <div class="alert alert-warning mt-3">
-      Apenas administradores podem cadastrar alunos.
-    </div>
-    {% endif %}
+    {% endif %} 
   </div>
 </div>
 {% endblock %}

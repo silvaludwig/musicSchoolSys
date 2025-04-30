@@ -1,6 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from . import views
+from .views import cadastro_usuario
 
 urlpatterns = [
     path("", views.index, name="index"),  # Homepage
@@ -20,4 +21,5 @@ urlpatterns = [
     ),
     path("login/", LoginView.as_view(template_name="gestao/login.html"), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
+    path("cadastro/", cadastro_usuario, name="cadastro_usuario"),
 ]

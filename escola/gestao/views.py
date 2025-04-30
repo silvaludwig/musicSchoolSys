@@ -4,6 +4,8 @@ from .forms import AlunoForm, ProfessorForm
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth import login
+from .forms import CadastroUsuarioForm
 
 
 def index(request):
@@ -13,6 +15,20 @@ def index(request):
 # Verifica se o usuário é admin
 def is_admin(user):
     return user.is_authenticated and user.is_superuser
+
+
+def cadastro_usuario(request):
+    if request.method == "POST":
+        form = CadastroUsuarioForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Loga o usuário automaticamente após o cadastro
+            return redirect(
+                "index"
+            )  # Substitua pelo nome da sua URL de redirecionamento
+    else:
+        form = CadastroUsuarioForm()
+    return render(request, "gestao/cadastro_usuario.html", {"form": form})
 
 
 # Proteja as views com login_required

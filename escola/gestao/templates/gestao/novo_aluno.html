@@ -26,5 +26,11 @@
       {% endfor %}
     </div>
   </div>
+  {% if user.is_authenticated and not user.is_superuser %}
+  <div class="alert alert-warning mt-3">
+    Apenas administradores podem realizar cadastros.
+  </div>
+  {% endif %}
+
 </div>
 {% endblock %}
