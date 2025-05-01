@@ -2,14 +2,22 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Aluno, Professor
 from .forms import AlunoForm, ProfessorForm
 from django.contrib import messages
-from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login
 from .forms import CadastroUsuarioForm
 
 
+# @login_required
 def index(request):
-    return render(request, "gestao/index.html")
+    # Contagem de registros para mostrar no dashboard
+    total_professores = Professor.objects.count()
+    total_alunos = Aluno.objects.count()
+
+    context = {
+        "total_professores": total_professores,
+        "total_alunos": total_alunos,
+    }
+    return render(request, "gestao/index.html", context)
 
 
 # Verifica se o usuário é admin

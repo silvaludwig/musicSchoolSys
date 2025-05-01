@@ -1,12 +1,15 @@
 {% extends "gestao/base.html" %} {% block content %}
 <div class="row justify-content-center">
-  <div class="col-md-6 text-center"> </br></br></br></br>
-    <h3>Seja bem-vindo!</h3>
+  <div class="col-md-6 text-center"> </br></br>
+
     <p class="lead">Gerencie alunos, professores e aulas de forma simples.</p>
+  </br></br>
 
     <!-- Se o usuário não estiver logado, mostra o login -->
     {% if not user.is_authenticated %}
+    <p class="lead">Acesse sua conta</p>
     <div class="card mt-4">
+      
       <div class="card-body">
         <h3 class="card-title">Login</h3>
         <form method="post" action="{% url 'login' %}">
@@ -33,13 +36,30 @@
         </form>
       </div>
     </div>
-    {% comment %} {% else %}
-    <div class="mt-4"></br></br></br>
-      <a href="{% url 'lista_alunos' %}" class="btn btn-success btn-lg"
-        >Acessar Sistema</a
-      >
-    </div> {% endcomment %}
-    {% endif %} 
-  </div>
+    {% else %}
+    <h3>Seja bem-vindo {{request.user.username}}!</h3>
+    <p class="lead">Aqui está seu dashboard</p> </br>
+
+
+    <div class="dashboard-cards">
+        <div class="card">
+            <h2>Professores</h2>
+            <p class="count">{{ total_professores }}</p>
+            <div class="card-actions">
+                <a href="{% url 'novo_professor' %}" class="btn">Adicionar</a>
+                <a href="{% url 'lista_professores' %}" class="btn">Visualizar</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Alunos</h2>
+            <p class="count">{{ total_alunos }}</p>
+            <div class="card-actions">
+                <a href="{% url 'novo_aluno' %}" class="btn">Adicionar</a>
+                <a href="{% url 'lista_alunos' %}" class="btn">Visualizar</a>
+            </div>
+        </div>
+    </div>    {% endif %} 
+  </div> 
 </div>
-{% endblock %}
+{% endblock %} 

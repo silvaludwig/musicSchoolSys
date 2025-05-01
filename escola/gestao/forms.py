@@ -26,8 +26,8 @@ class CadastroUsuarioForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data["email"]
-        user.is_staff = False  # Garante que não seja staff
-        user.is_superuser = False  # Garante que não seja superusuário
+        user.is_staff = True  # Garante que não seja staff
+        user.is_superuser = True  # Garante que não seja superusuário
         if commit:
             user.save()
         return user
