@@ -1,0 +1,65 @@
+{% extends "gestao/base.html" %} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center"> </br>
+
+    <p class="lead">Gerencie alunos, professores e aulas de forma simples.</p>
+  </br>
+
+    <!-- Se o usuário não estiver logado, mostra o login -->
+    {% if not user.is_authenticated %}
+    <p class="lead">Acesse sua conta</p>
+    <div class="card mt-4">
+      
+      <div class="card-body">
+        <h3 class="card-title">Login</h3>
+        <form method="post" action="{% url 'login' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <input
+              type="text"
+              name="username"
+              class="form-control"
+              placeholder="Usuário"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <input
+              type="password"
+              name="password"
+              class="form-control"
+              placeholder="Senha"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <h3>Seja bem-vindo {{request.user.username}}!</h3>
+    <p class="lead">Aqui está seu dashboard</p> </br>
+
+
+    <div class="dashboard-cards">
+        <div class="card">
+            <h2>Aulas</h2>
+            <p class="count">{{ total_aulas }}</p>
+            <div class="card-actions">
+                <a href="{% url 'nova_aula' %}" class="btn">Adicionar</a>
+                <a href="{% url 'minhas_aulas' %}" class="btn">Visualizar</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Alunos</h2>
+            <p class="count">{{ total_alunos }}</p>
+            <div class="card-actions">
+                <a href="{% url 'novo_aluno' %}" class="btn">Adicionar</a>
+                <a href="{% url 'meus_alunos' %}" class="btn">Visualizar</a>
+            </div>
+        </div>
+    </div>    {% endif %} 
+  </div> 
+</div>
+{% endblock %} 

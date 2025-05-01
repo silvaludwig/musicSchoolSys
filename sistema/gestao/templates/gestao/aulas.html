@@ -1,0 +1,37 @@
+{% extends "gestao/base.html" %} {% block content %}
+</br></br></br></br>
+<h2>Lista de Aulas</h2>
+{% comment %} <a href="{% url 'nova_aula' %}" class="btn btn-primary mb-3">Adicionar Aula</a> {% endcomment %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Titulo</th>
+      <th>Data</th>
+      <th>Horário</th>
+      <th>Aluno</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for aula in aulas %}
+    <tr>
+      <td>{{ aula.titulo }}</td>
+      <td>{{ aula.data }}</td>
+      <td>{{ aula.horario }}</td>
+      <td>{{ aula.aluno }}</td>
+      <td>
+        <a
+          href="{% url 'editar_aula' aula.id %}"
+          class="btn btn-sm btn-warning"
+          >Editar</a
+        >
+        <a
+          href="{% url 'deletar_aula' aula.id %}"
+          class="btn btn-sm btn-danger"
+          >Excluir</a
+        >
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
