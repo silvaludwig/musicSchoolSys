@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 
 class Aluno(models.Model):
     nome = models.CharField(max_length=50)
-    idade = models.IntegerField()
+    data_nascimento = models.DateField()
+    email = models.CharField(max_length=50)
+    telefone = models.IntegerField(max_length=15, null=False)
     data_cadastro = models.DateTimeField(auto_now_add=True)
     professor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="alunos")
 

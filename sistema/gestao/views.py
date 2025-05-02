@@ -23,8 +23,25 @@ def dashboard(request):
 
 @login_required
 def meus_alunos(request):
+    hoje = date.today()
     alunos = Aluno.objects.filter(professor=request.user)
-    return render(request, "gestao/alunos.html", {"alunos": alunos})
+
+    alunos_com_idade = []
+    for aluno in alunos:
+        if aluno.data_nascimento:
+            idade = (
+                hoje.year
+                - aluno.data_nascimento.year
+                - (
+                    (hoje.month, hoje.day)
+                    < (aluno.data_nascimento.month, aluno.data_nascimento.day)
+                )
+            )
+        else:
+            idade = None
+        alunos_com_idade.append({"aluno": aluno, "idade": idade})
+
+    return render(request, "gestao/alunos.html", {"alunos_com_idade": alunos_com_idade})
 
 
 @login_required
@@ -66,7 +83,7 @@ def editar_aluno(request, id):
         form = AlunoForm(request.POST, instance=aluno)
         if form.is_valid():
             form.save()
-            return redirect("alunos")
+            return redirect("meus_alunos")
     else:
         form = AlunoForm(instance=aluno)
     return render(request, "gestao/form_aluno.html", {"form": form})

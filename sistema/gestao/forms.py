@@ -6,9 +6,22 @@ from django.forms.widgets import DateInput
 
 
 class AlunoForm(forms.ModelForm):
+    data_nascimento = forms.DateField(
+        input_formats=["%d/%m/%Y"],
+        widget=DateInput(
+            format="%d/%m/%Y",
+            attrs={
+                "type": "text",
+                "class": "form-control",
+                "placeholder": "dd/mm/aaaa",
+            },
+        ),
+        label="Data de Nascimento",
+    )
+
     class Meta:
         model = Aluno
-        fields = ["nome", "idade"]
+        fields = ["nome", "data_nascimento", "email", "telefone"]
 
 
 class AulaForm(forms.ModelForm):
