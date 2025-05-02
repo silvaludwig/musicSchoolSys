@@ -2,10 +2,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Aula, Aluno
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import AlunoForm, AulaForm, CadastroUsuarioForm
-from django.contrib import messages
 from django.contrib.auth import login
-from django.utils import timezone
 from datetime import timedelta
+from django.http import JsonResponse
 
 
 @login_required
@@ -150,3 +149,24 @@ def cadastro_usuario(request):
     else:
         form = CadastroUsuarioForm()
     return render(request, "gestao/cadastro_usuario.html", {"form": form})
+
+
+@login_required
+def eventos_aulas(request):
+    aulas = Aula.objects.filter(professor=request.user)
+    eventos = []
+
+    for aula in aulas:
+        eventos.append(
+            {
+                "title": f"{aula.instrumento} - {aula.aluno.nome}",
+                "start": f"{aula.data}T{aula.horario}",
+            }
+        )
+
+    return JsonResponse(eventos, safe=False)
+
+
+@login_required
+def calendario(request):
+    return render(request, "gestao/calendario.html")
