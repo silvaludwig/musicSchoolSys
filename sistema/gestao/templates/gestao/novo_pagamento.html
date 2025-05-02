@@ -1,0 +1,40 @@
+{% extends "gestao/base.html" %}
+{% block content %}
+</br></br></br>
+<h2>Registrar Pagamento</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="id_aluno" class="form-label">Aluno</label>
+    {{ form.aluno }}
+  </div>
+
+  <div class="mb-3">
+    <label for="id_valor" class="form-label">Valor</label>
+    {{ form.valor }}
+  </div>
+
+  <div class="mb-3">
+    <label for="id_data_pagamento" class="form-label">Data do Pagamento</label>
+    {{ form.data_pagamento }}
+  </div>
+
+  <div class="mb-3">
+    <label for="id_referente_ao_mes" class="form-label">Referente ao mês</label>
+    {{ form.referente_ao_mes }}
+  </div>
+
+  <div class="mb-3">
+    <label for="id_forma_pagamento" class="form-label">Forma de pagamento</label>
+    {{ form.forma_pagamento }}
+  </div>
+
+  <div class="form-check mb-3">
+    {{ form.foi_pago }} <label class="form-check-label" for="id_foi_pago">Pago</label>
+  </div>
+
+  <button type="submit" class="btn btn-success">Salvar</button>
+  <a href="{% url 'index' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Aluno, Aula
+from .models import Aluno, Aula, Pagamento
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms.widgets import DateInput
@@ -70,3 +70,26 @@ class CadastroUsuarioForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class PagamentoForm(forms.ModelForm):
+    class Meta:
+        model = Pagamento
+        fields = [
+            "aluno",
+            "valor",
+            "data_pagamento",
+            "referente_ao_mes",
+            "foi_pago",
+            "forma_pagamento",
+        ]
+        widgets = {
+            "data_pagamento": forms.DateInput(
+                format="%d/%m/%Y",
+                attrs={
+                    "type": "text",
+                    "class": "form-control",
+                    "placeholder": "dd/mm/aaaa",
+                },
+            ),
+        }

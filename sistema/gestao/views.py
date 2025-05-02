@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
-from .models import Aula, Aluno
+from .models import Aula, Aluno, Pagamento
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import AlunoForm, AulaForm, CadastroUsuarioForm
+from .forms import AlunoForm, AulaForm, CadastroUsuarioForm, PagamentoForm
 from django.contrib.auth import login
 from datetime import timedelta, date
 from django.http import JsonResponse
+from django.contrib import messages
+from django.db.models import Sum
 
 
 @login_required
@@ -192,3 +194,37 @@ def eventos_aulas(request):
 @login_required
 def calendario(request):
     return render(request, "gestao/calendario.html")
+
+
+@login_required
+def novo_pagamento(request):
+    if request.method == "POST":
+        form = PagamentoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Pagamento registrado com sucesso.")
+            return redirect("resumo_financeiro")
+    else:
+        form = PagamentoForm()
+
+    return render(request, "gestao/novo_pagamento.html", {"form": form})
+
+
+def resumo_financeiro(request):
+    hoje = date.today()
+    pagamentos_mes = Pagamento.objects.filter(
+        data_pagamento__month=hoje.month,
+        data_pagamento__year=hoje.year,
+        foi_pago=True,
+    )
+
+    total_recebido = pagamentos_mes.aggregate(Sum("valor"))["valor__sum"] or 0
+    total_pagamentos = pagamentos_mes.count()
+
+    context = {
+        "pagamentos": pagamentos_mes,
+        "total_recebido": total_recebido,
+        "total_pagamentos": total_pagamentos,
+        "mes_atual": hoje.strftime("%B").capitalize(),
+    }
+    return render(request, "gestao/resumo_financeiro.html", context)

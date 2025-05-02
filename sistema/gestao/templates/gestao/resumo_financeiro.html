@@ -1,0 +1,55 @@
+{% extends "gestao/base.html" %} {% block content %}
+<div class="container mt-5">
+  <h2>💰 Resumo Financeiro - {{ mes_atual }}</h2>
+  <p class="lead">Recebimentos do mês atual</p>
+
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card bg-light shadow-sm">
+        <div class="card-body">
+          <h5>Total Recebido:</h5>
+          <p class="display-6 text-success">
+            R$ {{ total_recebido|floatformat:2 }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card bg-light shadow-sm">
+        <div class="card-body">
+          <h5>Pagamentos registrados:</h5>
+          <p class="display-6">{{ total_pagamentos }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="mb-3">Lista de Pagamentos</h4>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Aluno</th>
+        <th>Valor</th>
+        <th>Data</th>
+        <th>Forma de Pagamento</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in pagamentos %}
+      <tr>
+        <td>{{ p.aluno.nome }}</td>
+        <td>R$ {{ p.valor|floatformat:2 }}</td>
+        <td>{{ p.data_pagamento|date:"d/m/Y" }}</td>
+        <td>{{ p.forma_pagamento }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-muted text-center">
+          Nenhum pagamento registrado este mês.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

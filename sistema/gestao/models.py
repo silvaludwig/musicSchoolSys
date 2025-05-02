@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date
 
 
 class Aluno(models.Model):
@@ -24,3 +25,25 @@ class Aula(models.Model):
 
     def __str__(self):
         return f"Aula de {self.titulo} | {self.data}, {self.horario}"
+
+
+class Pagamento(models.Model):
+    aluno = models.ForeignKey("Aluno", on_delete=models.CASCADE)
+    valor = models.DecimalField(max_digits=8, decimal_places=2)
+    data_pagamento = models.DateField(default=date.today)
+    referente_ao_mes = models.CharField(max_length=20)  # Ex: "Maio/2025"
+    foi_pago = models.BooleanField(default=True)
+    forma_pagamento = models.CharField(
+        max_length=20,
+        choices=[
+            ("dinheiro", "Dinheiro"),
+            ("pix", "PIX"),
+            ("transferencia", "Transferência"),
+            ("boleto", "Boleto"),
+            ("outro", "Outro"),
+        ],
+        default="pix",
+    )
+
+    def __str__(self):
+        return f"{self.aluno.nome} - {self.referente_ao_mes}"

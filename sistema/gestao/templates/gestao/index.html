@@ -1,77 +1,118 @@
 {% extends "gestao/base.html" %} {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6 text-center"> </br>
-
-    <!-- Se o usuário não estiver logado, mostra o login -->
-    {% if not user.is_authenticated %}
-    <p class="lead">Acesse sua conta</p>
-    <div class="card mt-4">
-      
-      <div class="card-body">
-        <h3 class="card-title">Login</h3>
-        <form method="post" action="{% url 'login' %}">
-          {% csrf_token %}
-          <div class="mb-3">
-            <input
-              type="text"
-              name="username"
-              class="form-control"
-              placeholder="Usuário"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <input
-              type="password"
-              name="password"
-              class="form-control"
-              placeholder="Senha"
-              required
-            />
-          </div>
-          <button type="submit" class="btn btn-primary">Entrar</button>
-        </form>
+<div class="container mt-5">
+  {% if not user.is_authenticated %}
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <p class="lead">Acesse sua conta</p>
+      <div class="card mt-4 shadow">
+        <div class="card-body">
+          <h3 class="card-title">Login</h3>
+          <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <input
+                type="text"
+                name="username"
+                class="form-control"
+                placeholder="Usuário"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                placeholder="Senha"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Entrar</button>
+          </form>
+        </div>
       </div>
     </div>
-    {% else %}
-    <h2>Seja bem-vindo {{request.user.username}}!</h2>
-    <p class="lead">Aqui está seu resumo</p>
+  </div>
+  {% else %}
+  <div class="text-center mb-4">
+    <h2>Seja bem-vindo, {{ request.user.username }}!</h2>
+    <p class="lead">
+      Aqui está seu resumo de hoje ({{ data_hoje|date:"d/m/Y" }})
+    </p>
+  </div>
 
-    <div class="dashboard-cards">
-        <div class="card">
-            <h3>Aulas</h3>
-            <p class="count">{{ total_aulas }}</p>
-            <div class="card-actions">
-                <a href="{% url 'nova_aula' %}" class="btn">Adicionar</a>
-                <a href="{% url 'minhas_aulas' %}" class="btn">Visualizar</a>
-            </div>
+  <div class="row g-4">
+    <!-- Aulas -->
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">📘 Aulas</h5>
+          <p class="display-6">{{ total_aulas }}</p>
+          <a href="{% url 'nova_aula' %}" class="btn btn-outline-primary btn-sm"
+            >Adicionar</a
+          >
+          <a
+            href="{% url 'minhas_aulas' %}"
+            class="btn btn-outline-secondary btn-sm"
+            >Visualizar</a
+          >
         </div>
-
-        
-        <div class="card">
-          <h3>Alunos</h3>
-          <p class="count">{{ total_alunos }}</p>
-          <div class="card-actions">
-            <a href="{% url 'novo_aluno' %}" class="btn">Adicionar</a>
-            <a href="{% url 'meus_alunos' %}" class="btn">Visualizar</a>
-          </div>
-        </div>
-        <div class="card">
-          <h3 class="mt-4">Agendamentos ({{ data_hoje|date:"d/m/Y" }})</h3>
-          {% if aulas_hoje %}
-            <ul class="list-group mt-2">
-              {% for aula in aulas_hoje %}
-                <li class="list-group-item">
-                  <strong>{{ aula.horario }}</strong> — {{ aula.aluno.nome }} ({{ aula.instrumento }}) com {{ aula.professor }}
-                </li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            <p class="text-muted">Nenhuma aula agendada para hoje.</p>
-          {% endif %}
-          </div>
       </div>
-    </div>    {% endif %} 
-  </div> 
+    </div>
+
+    <!-- Alunos -->
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">🎓 Alunos</h5>
+          <p class="display-6">{{ total_alunos }}</p>
+          <a
+            href="{% url 'novo_aluno' %}"
+            class="btn btn-outline-primary btn-sm"
+            >Adicionar</a
+          >
+          <a
+            href="{% url 'meus_alunos' %}"
+            class="btn btn-outline-secondary btn-sm"
+            >Visualizar</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumo Financeiro -->
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">💰 Resumo Financeiro</h5>
+          <p class="text-muted">Em breve disponível</p>
+          <!-- Substitua isso depois por: -->
+          <!-- <p class="display-6">R$ {{ receita_mensal }}</p> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Agendamentos do Dia -->
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">📅 Aulas de hoje</h5>
+          {% if aulas_hoje %}
+          <ul class="list-group list-group-flush mt-3">
+            {% for aula in aulas_hoje %}
+            <li class="list-group-item">
+              <strong>{{ aula.horario }}</strong> — {{ aula.aluno.nome }} ({{
+              aula.instrumento }}) com {{ aula.professor }}
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="text-muted mt-2">Nenhuma aula agendada para hoje.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
 </div>
-{% endblock %} 
+{% endblock %}
