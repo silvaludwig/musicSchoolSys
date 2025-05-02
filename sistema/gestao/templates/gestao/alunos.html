@@ -1,0 +1,42 @@
+{% extends "gestao/base.html" %} {% block content %} <br /><br /><br /><br />
+<h2>Lista de Alunos</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>E-mail</th>
+      <th>Telefone</th>
+      <th>Professor</th>
+      <th>Idade</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in alunos_com_idade %}
+    <tr>
+      <td>{{ item.aluno.nome }}</td>
+      <td>{{ item.aluno.email }}</td>
+      <td>{{ item.aluno.telefone }}</td>
+      <td>{{ item.aluno.professor }}</td>
+      <td>
+        {% if item.idade %} {{ item.idade }} anos {% else %} Não informada
+        {%endif %}
+      </td>
+      <td>
+        <a
+          href="{% url 'editar_aluno' item.aluno.id %}"
+          class="btn btn-sm btn-warning"
+          >Editar</a
+        >
+        <a
+          href="{% url 'deletar_aluno' item.aluno.id %}"
+          class="btn btn-sm btn-danger"
+          >Excluir</a
+        >
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

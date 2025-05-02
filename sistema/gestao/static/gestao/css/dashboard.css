@@ -1,0 +1,27 @@
+/* dashboard.css - Versão adaptada para Bootstrap */
+
+.dashboard-cards {
+    display: grid;
+    gap: 1.5rem; /* Usando unidades relativas */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.card {
+    border: none; /* Remove borda padrão do Bootstrap */
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.count {
+    font-size: 2.5rem;
+    color: var(--bs-primary); /* Herda a cor primária do Bootstrap */
+}
+
+/* Sobrescreve apenas o necessário */
+.card-actions .btn {
+    min-width: 100px; /* Exemplo de ajuste */
+}

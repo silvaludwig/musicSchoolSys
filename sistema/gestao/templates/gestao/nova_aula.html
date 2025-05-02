@@ -1,0 +1,46 @@
+{% extends "gestao/base.html" %} {% block content %}
+</br></br></br></br>
+<div class="row">
+  <!-- Formulário de Cadastro (Lado Esquerdo) -->
+  <div class="col-md-6">
+    <h2>Agendar Nova Aula</h2>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit" class="btn btn-success">Salvar</button>
+      <a href="{% url 'minhas_aulas' %}" class="btn btn-secondary">Voltar</a>
+    </form>
+  </div>
+
+  <!-- Preview dos Últimos Alunos (Lado Direito) -->
+  <div class="col-md-6">
+    <h2>Últimas Aulas Agendadas</h2>
+    <div class="list-group">
+      {% for aula in ultimas_aulas %}
+      <div class="list-group-item">
+        <h5>{{ aula.titulo }}</h5>
+        <p><strong>Instrumento:</strong> {{ aula.instrumento }}</p>
+        <p><strong>Professor:</strong> {{ aula.professor }}</p>
+        <small>Data/hora: {{ aula.data|date:"d/m/Y" }} às {{ aula.horario }}</small> | 
+        <small>Cadastrado em: {{ aula.data_cadastro|date:"d/m/Y" }}</small>
+      </div>
+      {% empty %}
+      <p>Nenhuma Aula cadastrada ainda.</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% if user.is_authenticated and not user.is_superuser %}
+  <div class="alert alert-warning mt-3">
+    Apenas administradores podem realizar cadastros.
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+{% block extra_js %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $('input[name="data"]').mask('00/00/0000');
+    });
+  </script>
+{% endblock %}
