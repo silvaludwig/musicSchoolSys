@@ -13,7 +13,7 @@ class Aluno(models.Model):
 
 
 class Aula(models.Model):
-    titulo = models.CharField(max_length=50)
+    instrumento = models.CharField(max_length=50)
     data = models.DateField()
     horario = models.TimeField()
     data_cadastro = models.DateTimeField(auto_now_add=True)

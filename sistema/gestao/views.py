@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import AlunoForm, AulaForm, CadastroUsuarioForm
 from django.contrib import messages
 from django.contrib.auth import login
+from django.utils import timezone
+from datetime import timedelta
 
 
 @login_required
@@ -28,30 +30,19 @@ def meus_alunos(request):
 
 @login_required
 def novo_aluno(request):
-    ultimos_alunos = Aluno.objects.filter(professor=request.user).order_by(
-        "-data_cadastro"
-    )[:5]
     if request.method == "POST":
         form = AlunoForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(
-                request, "Aluno cadastrado com sucesso!"
-            )  # Mensagem de confirmação
+            aluno = form.save(commit=False)
+            aluno.professor = request.user
+            aluno.save()
             return redirect("meus_alunos")
     else:
         form = AlunoForm()
-
-    return render(
-        request,
-        "gestao/novo_aluno.html",
-        {
-            "form": form,
-            "ultimos_alunos": ultimos_alunos,
-        },
-    )
+    return render(request, "gestao/novo_aluno.html", {"form": form})
 
 
+@login_required
 def index(request):
     # Contagem de registros para mostrar no dashboard
     total_alunos = Aluno.objects.filter(professor=request.user).count()
@@ -94,28 +85,34 @@ def minhas_aulas(request):
 
 @login_required
 def nova_aula(request):
+    if request.method == "POST":
+        form = AulaForm(request.POST, user=request.user)  # <-- Aqui
+        if form.is_valid():
+            repetir = form.cleaned_data.get("repetir_semanalmente", False)
+            semanas = form.cleaned_data.get("semanas_repeticao", 1)
+            aula_base = form.save(commit=False)
+            aula_base.professor = request.user
+            aula_base.save()
+
+            if repetir and semanas > 1:
+                for i in range(1, semanas):
+                    nova_data = aula_base.data + timedelta(weeks=i)
+                    Aula.objects.create(
+                        instrumento=aula_base.instrumento,
+                        aluno=aula_base.aluno,
+                        data=nova_data,
+                        horario=aula_base.horario,
+                        professor=request.user,
+                    )
+            return redirect("minhas_aulas")
+    else:
+        form = AulaForm(user=request.user)  # <-- Aqui também
+
     ultimas_aulas = Aula.objects.filter(professor=request.user).order_by(
         "-data_cadastro"
     )[:5]
-
-    if request.method == "POST":
-        form = AulaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request, "Aula cadastrada com sucesso!"
-            )  # Mensagem de confirmação
-            return redirect("minhas_aulas")
-    else:
-        form = AulaForm()
-
     return render(
-        request,
-        "gestao/nova_aula.html",
-        {
-            "form": form,
-            "ultimas_aulas": ultimas_aulas,
-        },
+        request, "gestao/nova_aula.html", {"form": form, "ultimas_aulas": ultimas_aulas}
     )
 
 

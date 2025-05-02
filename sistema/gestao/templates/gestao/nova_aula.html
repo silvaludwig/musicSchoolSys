@@ -18,7 +18,7 @@
       {% for aula in ultimas_aulas %}
       <div class="list-group-item">
         <h5>{{ aula.titulo }}</h5>
-        <p><strong>Instrumento:</strong> {{ aula.titulo }}</p>
+        <p><strong>Instrumento:</strong> {{ aula.instrumento }}</p>
         <p><strong>Professor:</strong> {{ aula.professor }}</p>
         <small>Data/hora: {{ aula.data|date:"d/m/Y" }} às {{ aula.horario }}</small> | 
         <small>Cadastrado em: {{ aula.data_cadastro|date:"d/m/Y" }}</small>
