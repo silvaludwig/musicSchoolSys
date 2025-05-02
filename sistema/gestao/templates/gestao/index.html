@@ -2,8 +2,6 @@
 <div class="row justify-content-center">
   <div class="col-md-6 text-center"> </br>
 
-    <p class="lead">Gerencie alunos, professores e aulas de forma simples.</p>
-
     <!-- Se o usuário não estiver logado, mostra o login -->
     {% if not user.is_authenticated %}
     <p class="lead">Acesse sua conta</p>
@@ -36,28 +34,43 @@
       </div>
     </div>
     {% else %}
-    <h3>Seja bem-vindo {{request.user.username}}!</h3>
-    <p class="lead">Aqui está seu dashboard</p>
-
+    <h2>Seja bem-vindo {{request.user.username}}!</h2>
+    <p class="lead">Aqui está seu resumo</p>
 
     <div class="dashboard-cards">
         <div class="card">
-            <h2>Aulas</h2>
+            <h3>Aulas</h3>
             <p class="count">{{ total_aulas }}</p>
             <div class="card-actions">
                 <a href="{% url 'nova_aula' %}" class="btn">Adicionar</a>
                 <a href="{% url 'minhas_aulas' %}" class="btn">Visualizar</a>
             </div>
         </div>
+
         
         <div class="card">
-            <h2>Alunos</h2>
-            <p class="count">{{ total_alunos }}</p>
-            <div class="card-actions">
-                <a href="{% url 'novo_aluno' %}" class="btn">Adicionar</a>
-                <a href="{% url 'meus_alunos' %}" class="btn">Visualizar</a>
-            </div>
+          <h3>Alunos</h3>
+          <p class="count">{{ total_alunos }}</p>
+          <div class="card-actions">
+            <a href="{% url 'novo_aluno' %}" class="btn">Adicionar</a>
+            <a href="{% url 'meus_alunos' %}" class="btn">Visualizar</a>
+          </div>
         </div>
+        <div class="card">
+          <h3 class="mt-4">Agendamentos ({{ data_hoje|date:"d/m/Y" }})</h3>
+          {% if aulas_hoje %}
+            <ul class="list-group mt-2">
+              {% for aula in aulas_hoje %}
+                <li class="list-group-item">
+                  <strong>{{ aula.horario }}</strong> — {{ aula.aluno.nome }} ({{ aula.instrumento }}) com {{ aula.professor }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="text-muted">Nenhuma aula agendada para hoje.</p>
+          {% endif %}
+          </div>
+      </div>
     </div>    {% endif %} 
   </div> 
 </div>

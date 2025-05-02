@@ -3,7 +3,7 @@ from .models import Aula, Aluno
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import AlunoForm, AulaForm, CadastroUsuarioForm
 from django.contrib.auth import login
-from datetime import timedelta
+from datetime import timedelta, date
 from django.http import JsonResponse
 
 
@@ -43,6 +43,9 @@ def novo_aluno(request):
 
 @login_required
 def index(request):
+    hoje = date.today()
+    aulas_hoje = Aula.objects.filter(data=hoje, professor=request.user)
+
     # Contagem de registros para mostrar no dashboard
     total_alunos = Aluno.objects.filter(professor=request.user).count()
     total_aulas = Aula.objects.filter(professor=request.user).count()
@@ -50,6 +53,8 @@ def index(request):
     context = {
         "total_aulas": total_aulas,
         "total_alunos": total_alunos,
+        "aulas_hoje": aulas_hoje,
+        "data_hoje": hoje,
     }
     return render(request, "gestao/index.html", context)
 
