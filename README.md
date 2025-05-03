@@ -19,3 +19,15 @@ Este é um sistema web desenvolvido em Django para facilitar o agendamento de au
 - **HTML + CSS + JS**
 - **jQuery + jQuery Mask**
 - **SQLite** (banco de dados padrão do Django, pode ser trocado por PostgreSQL)
+
+## 🔐 Permissões
+
+- Apenas administradores podem realizar cadastros e edições.
+- Usuários comuns têm acesso limitado às funcionalidades.
+
+## 🧩 Melhorias Futuras
+
+- Integração com Google Calendar
+- Painel de resumo financeiro
+- Exportação de dados (PDF / Excel)
+- Notificações e lembretes por e-mail ou WhatsApp
