@@ -1,42 +1,56 @@
-{% extends "gestao/base.html" %} {% block content %} <br /><br /><br /><br />
-<h2>Lista de Alunos</h2>
-
-<table class="table">
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th>E-mail</th>
-      <th>Telefone</th>
-      <th>Professor</th>
-      <th>Idade</th>
-      <th>Ações</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in alunos_com_idade %}
-    <tr>
-      <td>{{ item.aluno.nome }}</td>
-      <td>{{ item.aluno.email }}</td>
-      <td>{{ item.aluno.telefone }}</td>
-      <td>{{ item.aluno.professor }}</td>
-      <td>
-        {% if item.idade %} {{ item.idade }} anos {% else %} Não informada
-        {%endif %}
-      </td>
-      <td>
-        <a
-          href="{% url 'editar_aluno' item.aluno.id %}"
-          class="btn btn-sm btn-warning"
-          >Editar</a
-        >
-        <a
-          href="{% url 'deletar_aluno' item.aluno.id %}"
-          class="btn btn-sm btn-danger"
-          >Excluir</a
-        >
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% extends "gestao/base.html" %} {% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title mb-4">👨‍🎓 Lista de Alunos</h4>
+      <a href="{% url 'novo_aluno' %}" class="btn btn-primary mb-3"
+        >➕ Cadastrar Aluno</a
+      >
+      {% if alunos_com_idade %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Telefone</th>
+              <th>Professor</th>
+              <th>Idade</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in alunos_com_idade %}
+            <tr>
+              <td>{{ item.aluno.nome }}</td>
+              <td>{{ item.aluno.email }}</td>
+              <td>{{ item.aluno.telefone }}</td>
+              <td>{{ item.aluno.professor }}</td>
+              <td>
+                {% if item.idade %} {{ item.idade }} anos {% else %} Não
+                informada {% endif %}
+              </td>
+              <td>
+                <a
+                  href="{% url 'editar_aluno' item.aluno.id %}"
+                  class="btn btn-sm btn-warning me-1"
+                  >Editar</a
+                >
+                <a
+                  href="{% url 'deletar_aluno' item.aluno.id %}"
+                  class="btn btn-sm btn-danger"
+                  >Excluir</a
+                >
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-muted">Nenhum aluno cadastrado.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

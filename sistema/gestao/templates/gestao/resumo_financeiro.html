@@ -24,28 +24,70 @@
     </div>
   </div>
 
-  <h4 class="mb-3">Lista de Pagamentos</h4>
+  <h4 class="mb-3">Pagamentos Efetivados ✅</h4>
   <table class="table table-bordered table-striped">
-    <thead>
+    <thead class="table-success">
       <tr>
         <th>Aluno</th>
         <th>Valor</th>
         <th>Data</th>
         <th>Forma de Pagamento</th>
+        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
-      {% for p in pagamentos %}
-      <tr>
+      {% for p in pagamentos_efetivados %}
+      <tr class="table-success">
         <td>{{ p.aluno.nome }}</td>
         <td>R$ {{ p.valor|floatformat:2 }}</td>
         <td>{{ p.data_pagamento|date:"d/m/Y" }}</td>
         <td>{{ p.forma_pagamento }}</td>
+        <td>
+          <a
+            href="{% url 'marcar_nao_pago' p.pk %}"
+            class="btn btn-warning btn-sm"
+            >Marcar como não pago</a
+          >
+        </td>
       </tr>
       {% empty %}
       <tr>
-        <td colspan="4" class="text-muted text-center">
-          Nenhum pagamento registrado este mês.
+        <td colspan="5" class="text-muted text-center">
+          Nenhum pagamento efetivado este mês.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h4 class="mb-3">Pagamentos Pendentes 🕒</h4>
+  <table class="table table-bordered table-striped">
+    <thead class="table-warning">
+      <tr>
+        <th>Aluno</th>
+        <th>Valor</th>
+        <th>Data</th>
+        <th>Forma de Pagamento</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in pagamentos_pendentes %}
+      <tr class="table-warning">
+        <td>{{ p.aluno.nome }}</td>
+        <td>R$ {{ p.valor|floatformat:2 }}</td>
+        <td>{{ p.data_pagamento|date:"d/m/Y" }}</td>
+        <td>{{ p.forma_pagamento }}</td>
+        <td>
+          <a href="{% url 'marcar_pago' p.pk %}" class="btn btn-success btn-sm"
+            >Marcar como pago</a
+          >
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-muted text-center">
+          Nenhum pagamento pendente este mês.
         </td>
       </tr>
       {% endfor %}

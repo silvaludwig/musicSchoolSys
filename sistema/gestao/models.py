@@ -7,7 +7,7 @@ class Aluno(models.Model):
     nome = models.CharField(max_length=50)
     data_nascimento = models.DateField()
     email = models.CharField(max_length=50)
-    telefone = models.IntegerField(max_length=15, null=False)
+    telefone = models.IntegerField(null=False)
     data_cadastro = models.DateTimeField(auto_now_add=True)
     professor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="alunos")
 
@@ -24,14 +24,16 @@ class Aula(models.Model):
     professor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="aulas")
 
     def __str__(self):
-        return f"Aula de {self.titulo} | {self.data}, {self.horario}"
+        return f"Aula de {self.instrumento} | {self.data}, {self.horario}"
 
 
 class Pagamento(models.Model):
-    aluno = models.ForeignKey("Aluno", on_delete=models.CASCADE)
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     valor = models.DecimalField(max_digits=8, decimal_places=2)
     data_pagamento = models.DateField(default=date.today)
-    referente_ao_mes = models.CharField(max_length=20)  # Ex: "Maio/2025"
+    referente_ao_mes = models.CharField(
+        max_length=20,
+    )
     foi_pago = models.BooleanField(default=True)
     forma_pagamento = models.CharField(
         max_length=20,

@@ -1,45 +1,63 @@
 {% extends "gestao/base.html" %} {% block content %}
-</br></br></br></br>
-<div class="row">
-  <!-- Formulário de Cadastro (Lado Esquerdo) -->
-  <div class="col-md-6">
-    <h2>Cadastrar Novo Aluno</h2>
-    <form method="post">
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit" class="btn btn-success">Salvar</button>
-      <a href="{% url 'meus_alunos' %}" class="btn btn-secondary">Voltar</a>
-    </form>
-  </div>
-
-  <!-- Preview dos Últimos Alunos (Lado Direito) -->
-  <div class="col-md-6">
-    <h2>Últimos Alunos Cadastrados</h2>
-    <div class="list-group">
-      {% for aluno in ultimos_alunos %}
-      <div class="list-group-item">
-        <h5>{{ aluno.nome }}</h5>
-        <p><strong>Professor:</strong> {{ aluno.professor }}</p>
-        <small>Cadastrado em: {{ aluno.data_cadastro|date:"d/m/Y" }}</small>
+<div class="container mt-5">
+  <div class="row g-4">
+    <!-- Formulário de Cadastro -->
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="card-title mb-3">🧑‍🎓 Cadastrar Novo Aluno</h4>
+          <form method="post">
+            {% csrf_token %} {{ form.as_p }}
+            <div class="d-flex justify-content-between mt-3">
+              <button type="submit" class="btn btn-success">Salvar</button>
+              <a href="{% url 'meus_alunos' %}" class="btn btn-secondary"
+                >Voltar</a
+              >
+            </div>
+          </form>
+        </div>
       </div>
-      {% empty %}
-      <p>Nenhum aluno cadastrado ainda.</p>
-      {% endfor %}
+    </div>
+
+    <!-- Últimos Alunos Cadastrados -->
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h4 class="card-title mb-3">📋 Últimos Alunos Cadastrados</h4>
+          {% if ultimos_alunos %}
+          <div class="list-group">
+            {% for aluno in ultimos_alunos %}
+            <div class="list-group-item">
+              <h6 class="mb-1">{{ aluno.nome }}</h6>
+              <p class="mb-1">
+                <strong>Professor:</strong> {{ aluno.professor }}
+              </p>
+              <small class="text-muted">
+                Cadastrado em: {{ aluno.data_cadastro|date:"d/m/Y" }}
+              </small>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p class="text-muted">Nenhum aluno cadastrado ainda.</p>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
+
   {% if user.is_authenticated and not user.is_superuser %}
-  <div class="alert alert-warning mt-3">
+  <div class="alert alert-warning mt-4 text-center">
     Apenas administradores podem realizar cadastros.
   </div>
   {% endif %}
-
 </div>
-{% endblock %}
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script>
   $(document).ready(function () {
-    $("input[name='data_nascimento']").mask('00/00/0000');
+    $("input[name='data_nascimento']").mask("00/00/0000");
   });
 </script>
 {% endblock %}

@@ -1,46 +1,67 @@
 {% extends "gestao/base.html" %} {% block content %}
-</br></br></br></br>
-<div class="row">
-  <!-- Formulário de Cadastro (Lado Esquerdo) -->
-  <div class="col-md-6">
-    <h2>Agendar Nova Aula</h2>
-    <form method="post">
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit" class="btn btn-success">Salvar</button>
-      <a href="{% url 'minhas_aulas' %}" class="btn btn-secondary">Voltar</a>
-    </form>
-  </div>
-
-  <!-- Preview dos Últimos Alunos (Lado Direito) -->
-  <div class="col-md-6">
-    <h2>Últimas Aulas Agendadas</h2>
-    <div class="list-group">
-      {% for aula in ultimas_aulas %}
-      <div class="list-group-item">
-        <h5>{{ aula.titulo }}</h5>
-        <p><strong>Instrumento:</strong> {{ aula.instrumento }}</p>
-        <p><strong>Professor:</strong> {{ aula.professor }}</p>
-        <small>Data/hora: {{ aula.data|date:"d/m/Y" }} às {{ aula.horario }}</small> | 
-        <small>Cadastrado em: {{ aula.data_cadastro|date:"d/m/Y" }}</small>
+<div class="container mt-5">
+  <div class="row g-4">
+    <!-- Formulário de Cadastro -->
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h4 class="card-title mb-3">📘 Agendar Nova Aula</h4>
+          <form method="post">
+            {% csrf_token %} {{ form.as_p }}
+            <div class="d-flex justify-content-between mt-3">
+              <button type="submit" class="btn btn-success">Salvar</button>
+              <a href="{% url 'minhas_aulas' %}" class="btn btn-secondary"
+                >Voltar</a
+              >
+            </div>
+          </form>
+        </div>
       </div>
-      {% empty %}
-      <p>Nenhuma Aula cadastrada ainda.</p>
-      {% endfor %}
+    </div>
+
+    <!-- Últimas Aulas Agendadas -->
+    <div class="col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h4 class="card-title mb-3">📅 Últimas Aulas Agendadas</h4>
+          {% if ultimas_aulas %}
+          <div class="list-group">
+            {% for aula in ultimas_aulas %}
+            <div class="list-group-item">
+              <h6 class="mb-1">{{ aula.titulo }}</h6>
+              <p class="mb-1">
+                <strong>Instrumento:</strong> {{ aula.instrumento }}
+              </p>
+              <p class="mb-1">
+                <strong>Professor:</strong> {{ aula.professor }}
+              </p>
+              <small class="text-muted">
+                Data/hora: {{ aula.data|date:"d/m/Y" }} às {{ aula.horario }} |
+                Cadastrado em: {{ aula.data_cadastro|date:"d/m/Y" }}
+              </small>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p class="text-muted">Nenhuma aula cadastrada ainda.</p>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
+
   {% if user.is_authenticated and not user.is_superuser %}
-  <div class="alert alert-warning mt-3">
+  <div class="alert alert-warning mt-4 text-center">
     Apenas administradores podem realizar cadastros.
   </div>
   {% endif %}
 </div>
-{% endblock %}
-{% block extra_js %}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-  <script>
-    $(document).ready(function(){
-      $('input[name="data"]').mask('00/00/0000');
-    });
-  </script>
+{% endblock %} {% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $('input[name="data"]').mask("00/00/0000");
+  });
+</script>
 {% endblock %}

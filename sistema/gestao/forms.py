@@ -93,3 +93,7 @@ class PagamentoForm(forms.ModelForm):
                 },
             ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["data_pagamento"].input_formats = ["%d/%m/%Y"]

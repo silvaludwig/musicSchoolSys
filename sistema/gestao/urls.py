@@ -20,4 +20,10 @@ urlpatterns = [
     path("eventos/", views.eventos_aulas, name="eventos_aulas"),
     path("novo_pagamento/", views.novo_pagamento, name="novo_pagamento"),
     path("financeiro/", views.resumo_financeiro, name="resumo_financeiro"),
+    path("pagamento/<int:pk>/marcar_pago/", views.marcar_pago, name="marcar_pago"),
+    path(
+        "pagamento/<int:pk>/marcar_nao_pago/",
+        views.marcar_nao_pago,
+        name="marcar_nao_pago",
+    ),
 ]

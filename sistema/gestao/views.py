@@ -67,14 +67,32 @@ def index(request):
 
     # Contagem de registros para mostrar no dashboard
     total_alunos = Aluno.objects.filter(professor=request.user).count()
-    total_aulas = Aula.objects.filter(professor=request.user).count()
+    total_aulas = Aula.objects.filter(data=hoje, professor=request.user).count()
+
+    pagamentos_mes = Pagamento.objects.filter(
+        data_pagamento__month=hoje.month,
+        data_pagamento__year=hoje.year,
+    )
+
+    total_recebido = (
+        pagamentos_mes.filter(foi_pago=True).aggregate(Sum("valor"))["valor__sum"] or 0
+    )
+    total_pendente = (
+        pagamentos_mes.filter(foi_pago=False).aggregate(Sum("valor"))["valor__sum"] or 0
+    )
+
+    total_pagamentos = pagamentos_mes.count()
 
     context = {
-        "total_aulas": total_aulas,
-        "total_alunos": total_alunos,
-        "aulas_hoje": aulas_hoje,
         "data_hoje": hoje,
+        "total_alunos": total_alunos,
+        "total_aulas": total_aulas,
+        "aulas_hoje": aulas_hoje,
+        "total_pagamentos": total_pagamentos,  # Aqui deve mostrar o total em dinheiro
+        "total_pendente": total_pendente,
+        "total_recebido": total_recebido,  # Aqui deve mostrar o total em dinheiro
     }
+
     return render(request, "gestao/index.html", context)
 
 
@@ -215,16 +233,33 @@ def resumo_financeiro(request):
     pagamentos_mes = Pagamento.objects.filter(
         data_pagamento__month=hoje.month,
         data_pagamento__year=hoje.year,
-        foi_pago=True,
     )
+    pagamentos_efetivados = pagamentos_mes.filter(foi_pago=True)
+    pagamentos_pendentes = pagamentos_mes.filter(foi_pago=False)
 
-    total_recebido = pagamentos_mes.aggregate(Sum("valor"))["valor__sum"] or 0
+    total_recebido = pagamentos_efetivados.aggregate(Sum("valor"))["valor__sum"] or 0
     total_pagamentos = pagamentos_mes.count()
 
     context = {
-        "pagamentos": pagamentos_mes,
+        "pagamentos_mes": pagamentos_mes,
         "total_recebido": total_recebido,
+        "pagamentos_pendentes": pagamentos_pendentes,
+        "pagamentos_efetivados": pagamentos_efetivados,
         "total_pagamentos": total_pagamentos,
         "mes_atual": hoje.strftime("%B").capitalize(),
     }
     return render(request, "gestao/resumo_financeiro.html", context)
+
+
+def marcar_pago(request, pk):
+    pagamento = get_object_or_404(Pagamento, pk=pk)
+    pagamento.foi_pago = True
+    pagamento.save()
+    return redirect("resumo_financeiro")
+
+
+def marcar_nao_pago(request, pk):
+    pagamento = get_object_or_404(Pagamento, pk=pk)
+    pagamento.foi_pago = False
+    pagamento.save()
+    return redirect("resumo_financeiro")
