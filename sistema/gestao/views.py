@@ -9,18 +9,54 @@ from django.contrib import messages
 from django.db.models import Sum
 
 
+def cadastro_usuario(request):
+    if request.method == "POST":
+        form = CadastroUsuarioForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Loga o usuário automaticamente após o cadastro
+            return redirect(
+                "index"
+            )  # Substitua pelo nome da sua URL de redirecionamento
+    else:
+        form = CadastroUsuarioForm()
+    return render(request, "gestao/cadastro_usuario.html", {"form": form})
+
+
 @login_required
-def dashboard(request):
+def index(request):
+    hoje = date.today()
+    aulas_hoje = Aula.objects.filter(data=hoje, professor=request.user)
+
+    # Contagem de registros para mostrar no dashboard
     total_alunos = Aluno.objects.filter(professor=request.user).count()
-    total_aulas = Aula.objects.filter(professor=request.user).count()
-    return render(
-        request,
-        "gestao/dashboard.html",
-        {
-            "total_alunos": total_alunos,
-            "total_aulas": total_aulas,
-        },
+    total_aulas = Aula.objects.filter(data=hoje, professor=request.user).count()
+
+    pagamentos_mes = Pagamento.objects.filter(
+        data_pagamento__month=hoje.month,
+        data_pagamento__year=hoje.year,
     )
+
+    total_recebido = (
+        pagamentos_mes.filter(foi_pago=True).aggregate(Sum("valor"))["valor__sum"] or 0
+    )
+    total_pendente = (
+        pagamentos_mes.filter(foi_pago=False).aggregate(Sum("valor"))["valor__sum"] or 0
+    )
+
+    total_pagamentos = pagamentos_mes.count()
+
+    context = {
+        "data_hoje": hoje,
+        "total_alunos": total_alunos,
+        "total_aulas": total_aulas,
+        "aulas_hoje": aulas_hoje,
+        "total_pagamentos": total_pagamentos,  # Aqui deve mostrar o total em dinheiro
+        "total_pendente": total_pendente,
+        "total_recebido": total_recebido,  # Aqui deve mostrar o total em dinheiro
+    }
+
+    return render(request, "gestao/index.html", context)
 
 
 @login_required
@@ -58,42 +94,6 @@ def novo_aluno(request):
     else:
         form = AlunoForm()
     return render(request, "gestao/novo_aluno.html", {"form": form})
-
-
-@login_required
-def index(request):
-    hoje = date.today()
-    aulas_hoje = Aula.objects.filter(data=hoje, professor=request.user)
-
-    # Contagem de registros para mostrar no dashboard
-    total_alunos = Aluno.objects.filter(professor=request.user).count()
-    total_aulas = Aula.objects.filter(data=hoje, professor=request.user).count()
-
-    pagamentos_mes = Pagamento.objects.filter(
-        data_pagamento__month=hoje.month,
-        data_pagamento__year=hoje.year,
-    )
-
-    total_recebido = (
-        pagamentos_mes.filter(foi_pago=True).aggregate(Sum("valor"))["valor__sum"] or 0
-    )
-    total_pendente = (
-        pagamentos_mes.filter(foi_pago=False).aggregate(Sum("valor"))["valor__sum"] or 0
-    )
-
-    total_pagamentos = pagamentos_mes.count()
-
-    context = {
-        "data_hoje": hoje,
-        "total_alunos": total_alunos,
-        "total_aulas": total_aulas,
-        "aulas_hoje": aulas_hoje,
-        "total_pagamentos": total_pagamentos,  # Aqui deve mostrar o total em dinheiro
-        "total_pendente": total_pendente,
-        "total_recebido": total_recebido,  # Aqui deve mostrar o total em dinheiro
-    }
-
-    return render(request, "gestao/index.html", context)
 
 
 @login_required
@@ -179,20 +179,6 @@ def deletar_aula(request, id):
     return render(request, "gestao/confirmar_delete.html", {"aula": aula})
 
 
-def cadastro_usuario(request):
-    if request.method == "POST":
-        form = CadastroUsuarioForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # Loga o usuário automaticamente após o cadastro
-            return redirect(
-                "index"
-            )  # Substitua pelo nome da sua URL de redirecionamento
-    else:
-        form = CadastroUsuarioForm()
-    return render(request, "gestao/cadastro_usuario.html", {"form": form})
-
-
 @login_required
 def eventos_aulas(request):
     aulas = Aula.objects.filter(professor=request.user)
@@ -228,6 +214,7 @@ def novo_pagamento(request):
     return render(request, "gestao/novo_pagamento.html", {"form": form})
 
 
+@login_required
 def resumo_financeiro(request):
     hoje = date.today()
     pagamentos_mes = Pagamento.objects.filter(

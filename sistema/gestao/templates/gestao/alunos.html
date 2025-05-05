@@ -14,7 +14,6 @@
               <th>Nome</th>
               <th>E-mail</th>
               <th>Telefone</th>
-              <th>Professor</th>
               <th>Idade</th>
               <th>Ações</th>
             </tr>
@@ -25,7 +24,6 @@
               <td>{{ item.aluno.nome }}</td>
               <td>{{ item.aluno.email }}</td>
               <td>{{ item.aluno.telefone }}</td>
-              <td>{{ item.aluno.professor }}</td>
               <td>
                 {% if item.idade %} {{ item.idade }} anos {% else %} Não
                 informada {% endif %}
